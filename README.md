@@ -15,15 +15,15 @@ UPSERT | 1. if row exists, update <br/> 2. if not, insert | no
 COALESCE | Return the first non-null value in a list | yes
 LEAST | return smallest value | yes
 GREATEST | return biggest value | yes
-FULL OUTER JOIN | 
-ON | preceded by JOIN
-GROUP BY |
 DATEDIFF | applied to "yyyy-mm-dd" | yes
-LEFT OUTER JOIN |
 WHEN THEN (ELSE) | a.k.a. The SQL CASE Statement | yes
 SUM (WHERE condition)| returns the total sum of a numeric column | yes
 COUNT (WHERE condition) | returns the number of rows that matches a specified criterion | yes
 INNER JOIN | 
+LEFT OUTER JOIN |
+FULL OUTER JOIN | 
+ON | preceded by JOIN
+GROUP BY |
 
 # footnotes
 
