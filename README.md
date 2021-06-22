@@ -20,6 +20,8 @@ table | description
 daily_activity | table containing user activities such as 'sign-up', 'sign-in', 'purchase'
 dim_customer | a cohort table to be computed with SQL
 
+see the detailed python code [here](generation.ipynb).
+
 ## Retention Studies
 
 suppose we are continuously upserting into dim_customer (which contains the AcquisitionDate),
