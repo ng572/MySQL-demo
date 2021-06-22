@@ -2,20 +2,24 @@
 a demo for a job I am applying at gamelofts
 
 # Areas of Interest
-Borrowing from the concepts of e-commerce, I assume these five areas would be most important as the outcome of analysis.
+I am trying to instantiate the code and concept written in [this article](https://medium.com/analytics-and-data/e-commerce-analysis-data-structures-and-applications-6420c4fa65e7)\
+Borrowing from the concepts, I assume these five areas would be most important as the outcome of e-commerce analysis.
 * GROWTH
 * RETENTION
 * STOCK MANAGEMENT
 * ENGAGEMENT
 * PRICING
 
-While lacking experience in the field, I opt to demonstrate some skills in Python and SQL that may make me stand out a little.
+While lacking experience in the field, I opt to demonstrate some skills in Python and SQL that may make me stand out a little.\
+I will only be doing a little code that will show customer retention rate.
 
 ## Data Generation
 
 For the purpose of demo-ing the SQL codes I will be generating fake user activity data using Python.
 
 It is assumed that each user will initially sign-up for goods / services at a certain date, before the subsequent sign-ins and purchase activities.
+
+Data between 2017-01-01 and 2017-12-31 will be generated.
 
 ### Encoding
 
@@ -53,7 +57,7 @@ For some reason there are a few missing CustomerID, but we will let that go for 
 
 ## Retention Studies
 
-suppose we are using the table dim_customer to keep track of each customer's acquisition date.
+suppose we are using a table named `dim_customer` to keep track of each customer's acquisition date.
 
 suppose we are continuously upsert-ing into dim_customer (which contains the AcquisitionDate),
 from the daily_activity table\
@@ -160,7 +164,7 @@ DaySinceAcquisition | D1ActiveCustomers
 4 | 700
 5 | 739
 
-Now let's see the decay pattern, which we expect to be constant (uniformly distributed and not decaying)\
-And it looks ugly but is exactly what we expected.
+Now let's see the decay pattern, which we expect to be constant (uniformly distributed and not really decaying)\
+And it looks ugly but is exactly what we expected. In real life, it should display an actual decaying pattern.
 
 <img src="decay_percent.png" width=60%>
