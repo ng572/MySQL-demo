@@ -1,5 +1,5 @@
-# gamelofts_demo
-a demo for a job I am applying at gamelofts
+# gameloft_demo
+a demo for a job I am applying at gameloft
 
 # Areas of Interest
 I am trying to instantiate the code and concept written in [this article](https://medium.com/analytics-and-data/e-commerce-analysis-data-structures-and-applications-6420c4fa65e7)\
