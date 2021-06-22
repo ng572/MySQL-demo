@@ -25,6 +25,17 @@ FULL OUTER JOIN | same as OUTER JOIN | no
 ON | preceded by JOIN | yes
 GROUP BY | aggregate rows with the same values | yes
 
+## Data Generation
+
+For the purpose of demo-ing the SQL codes I will be generating fake e-commerce data using Python.
+
+A separate set of data will be generated for each task. (meaning independence)
+
+table | description
+--- | ---
+daily_activity | table containing user activities such as 'sign-up', 'sign-in', 'purchase'
+dim_customer | a cohort table to be computed with SQL
+
 ## Retention Studies
 
 suppose we are continuously upserting into dim_customer (which contains the AcquisitionDate),
@@ -51,6 +62,28 @@ FULL OUTER JOIN (
 GROUP BY 1, 2
 ```
 where <RUN_DATE> is the incremental date (do this every day)
+
+```sql
+SELECT
+	DATEDIFF(ac.ActivityDate, dc.AcquisitionDate) AS DaySinceAcquisition,
+	COUNT(DISTINCT ac.CustomerId) AS D1ActiveCustomers
+FROM dim_customer dc
+LEFT OUTER JOIN (
+	SELECT
+		CustomerId, 
+		ActivityDate
+	FROM daily_activity
+	WHERE 
+		ActivityType IN ('signup', 'signin')
+		AND ActivityDate >= '<MIN_DATE>'
+	GROUP BY 1,2
+) ac 
+	ON dc.CustomerId = ac.CustomerId 
+	AND dc.AcquisitionDate <= ac.ActivityDate
+WHERE 
+	dc.AcquisitionDate => '<MIN_DATE>'
+GROUP BY 1
+```
 
 # footnotes
 
