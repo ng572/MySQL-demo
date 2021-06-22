@@ -22,6 +22,14 @@ dim_customer | a cohort table to be computed with SQL
 
 see the detailed python code [here](generation.ipynb).
 
+## Loading Data Into MySQL
+
+```sql
+LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv" INTO TABLE daily_activity
+	FIELDS TERMINATED BY ','
+	IGNORE 1 LINES;
+```
+
 ## Retention Studies
 
 suppose we are continuously upserting into dim_customer (which contains the AcquisitionDate),
