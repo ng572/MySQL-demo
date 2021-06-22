@@ -38,10 +38,15 @@ LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv" INTO T
 	FIELDS TERMINATED BY ','
 	IGNORE 1 LINES;
 ```
+For some reason there are a few missing CustomerID, but we will let that go for the sake of time.
+```sql
+>> SELECT count(distinct CustomerID) FROM daily_activity
+9889
+```
 
 ## Retention Studies
 
-suppose we are continuously upserting into dim_customer (which contains the AcquisitionDate),
+suppose we are continuously upsert-ing into dim_customer (which contains the AcquisitionDate),
 from the daily_activity table\
 we could use the following code:
 
@@ -51,28 +56,71 @@ CREATE TABLE dim_customer (
 	`AcquisitionDate` DATE
 )
 ```
-
 ```sql
-UPSERT INTO dim_customer
-SELECT
- COALESCE(dc.CustomerId, ac.CustomerId) AS CustomerId, 
- LEAST(dc.AcquisitionDate, ac.ActivityDate) AS AcquisitionDate
-FROM dim_customers dc
-FULL OUTER JOIN (
- SELECT 
-  CustomerId,
-  ActivityDate
- FROM daily_activity 
- WHERE 
-  ActivityType = 'signup'
-  AND ActivityDate = '<RUN_DATE>'
- GROUP BY 1, 2
-) ac 
- ON dc.CustomerId = ac.CustomerId
-GROUP BY 1, 2
-```
-where <RUN_DATE> is the incremental date (do this every day)
+delimiter //
 
+CREATE DEFINER=`root`@`%` PROCEDURE `update_dim_customer`(`date` DATE)
+BEGIN
+	INSERT IGNORE INTO dim_customer
+	SELECT
+	 COALESCE(dc.CustomerId, ac.CustomerId) AS CustomerId, 
+	 ac.ActivityDate AS AcquisitionDate
+	FROM dim_customer dc
+	RIGHT JOIN (
+	 SELECT 
+	  CustomerId,
+	  ActivityDate
+	 FROM daily_activity 
+	 WHERE 
+	  ActivityType = 0
+	  AND ActivityDate = `date`
+	 GROUP BY 1, 2
+	) ac 
+	 ON dc.CustomerId = ac.CustomerId
+	GROUP BY 1, 2;
+END
+```
+```sql
+delimiter //
+
+CREATE PROCEDURE doiterate()
+BEGIN
+  SET @running_date = '2017-01-01';
+  SET @num = 0;
+  label1: LOOP
+    SET @num = @num + 1;
+	SET @running_date = DATE_ADD(@running_date, INTERVAL 1 DAY);
+	CALL update_dim_customer(@running_date);
+    IF @num < 365 THEN
+      ITERATE label1;
+    END IF;
+    LEAVE label1;
+  END LOOP label1;
+END;
+```
+Finally, calling the doiterate function
+```sql
+CALL doiterate()
+```
+```sql
+SELECT * FROM demo.dim_customer ORDER BY AcquisitionDate;
+```
+CustomerId | AcquisitionDate
+--- | ---
+3418 | 2017-01-01
+1641 | 2017-01-01
+5642 | 2017-01-01
+4307 | 2017-01-01
+7302 | 2017-01-01
+... | ...
+
+We have exactly one entry for each distinct CustomerID in daily_activity
+```sql
+>> SELECT COUNT(*) FROM demo.dim_customer;
+9889
+```
+Let's run the below code for deducing the customer activity level since sign-up\
+by replacing <MIN_DATE> with '2017-01-01'
 ```sql
 SELECT
 	DATEDIFF(ac.ActivityDate, dc.AcquisitionDate) AS DaySinceAcquisition,
@@ -84,16 +132,28 @@ LEFT OUTER JOIN (
 		ActivityDate
 	FROM daily_activity
 	WHERE 
-		ActivityType IN ('signup', 'signin')
+		ActivityType IN (0, 1)
 		AND ActivityDate >= '<MIN_DATE>'
 	GROUP BY 1,2
 ) ac 
 	ON dc.CustomerId = ac.CustomerId 
 	AND dc.AcquisitionDate <= ac.ActivityDate
 WHERE 
-	dc.AcquisitionDate => '<MIN_DATE>'
+	dc.AcquisitionDate >= '<MIN_DATE>'
 GROUP BY 1
 ```
+DaySinceAcquisition | D1ActiveCustomers
+--- | ---
+0 | 9889
+1 | 665
+2 | 673
+3 | 708
+4 | 700
+5 | 739
+
+Now let's see the decay pattern, which we expect to be constant (uniformly distributed and not decaying)
+
+<img src="https://user-images.githubusercontent.com/12572058/123000281-f6ffe580-d3e1-11eb-90b4-d051e864e37b.png" width=60%>
 
 # footnotes
 
