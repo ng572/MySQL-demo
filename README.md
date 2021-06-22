@@ -30,3 +30,4 @@ GROUP BY | aggregate rows with the same values | yes
 word | oxford dictionary
 --- | ---
 COALESCE | to come together to form one larger group, substance, etc
+SKU | Stock Keeping Unit
