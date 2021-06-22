@@ -19,11 +19,11 @@ DATEDIFF | applied to "yyyy-mm-dd" | yes
 WHEN THEN (ELSE) | a.k.a. The SQL CASE Statement | yes
 SUM (WHERE condition)| returns the total sum of a numeric column | yes
 COUNT (WHERE condition) | returns the number of rows that matches a specified criterion | yes
-INNER JOIN | 
-LEFT OUTER JOIN |
-FULL OUTER JOIN | 
-ON | preceded by JOIN
-GROUP BY |
+INNER JOIN | rows which intersect both tables | yes
+LEFT OUTER JOIN | same as LEFT JOIN. LEFT = FROM table1, RIGHT = JOIN table2 | yes
+FULL OUTER JOIN | same as OUTER JOIN | no
+ON | preceded by JOIN | yes
+GROUP BY | aggregate rows with the same values | yes
 
 # footnotes
 
