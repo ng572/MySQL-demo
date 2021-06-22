@@ -1,7 +1,7 @@
 # gamelofts_demo
 a demo for a job I am applying at gamelofts
 
-# 5 Areas of Interest
+# Areas of Interest
 Borrowing from the concepts of e-commerce, I assume these five areas would be most important as the outcome of analysis.
 * GROWTH
 * RETENTION
@@ -9,26 +9,25 @@ Borrowing from the concepts of e-commerce, I assume these five areas would be mo
 * ENGAGEMENT
 * PRICING
 
+While lacking experience in the field, I opt to demonstrate some skills in Python and SQL that may make me stand out a little.
+
 ## Data Generation
 
-For the purpose of demo-ing the SQL codes I will be generating fake e-commerce data using Python.
+For the purpose of demo-ing the SQL codes I will be generating fake user activity data using Python.
 
-A separate set of data will be generated for each task. (meaning independence)
+It is assumed that each user will initially sign-up for goods / services at a certain date, before the subsequent sign-ins and purchase activities.
 
-table | description
---- | ---
-daily_activity | table containing user activities such as 'sign-up', 'sign-in', 'purchase'
-dim_customer | a cohort table to be computed with SQL
-
-see the detailed python code [here](generation.ipynb).
-
-## Encoding
+### Encoding
 
 Code | Activity
 --- | ---
 0 | sign-up
 1 | sign-in
 2 | purchase
+
+### Action
+
+see the detailed python code and result [here](generation.ipynb).
 
 ## Loading Data Into MySQL
 
@@ -53,6 +52,8 @@ For some reason there are a few missing CustomerID, but we will let that go for 
 ```
 
 ## Retention Studies
+
+suppose we are using the table dim_customer to keep track of each customer's acquisition date.
 
 suppose we are continuously upsert-ing into dim_customer (which contains the AcquisitionDate),
 from the daily_activity table\
@@ -159,13 +160,7 @@ DaySinceAcquisition | D1ActiveCustomers
 4 | 700
 5 | 739
 
-Now let's see the decay pattern, which we expect to be constant (uniformly distributed and not decaying)
+Now let's see the decay pattern, which we expect to be constant (uniformly distributed and not decaying)\
+And it looks ugly but is exactly what we expected.
 
 <img src="decay_percent.png" width=60%>
-
-# footnotes
-
-word | meaning
---- | ---
-COALESCE | to come together to form one larger group, substance, etc
-SKU | Stock Keeping Unit
