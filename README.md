@@ -16,7 +16,7 @@ COALESCE | Return the first non-null value in a list | yes
 LEAST | return smallest value | yes
 GREATEST | return biggest value | yes
 FULL OUTER JOIN | 
-ON |
+ON | preceded by JOIN
 GROUP BY |
 DATEDIFF | applied to "yyyy-mm-dd" | yes
 LEFT OUTER JOIN |
