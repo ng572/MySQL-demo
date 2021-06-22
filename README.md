@@ -25,9 +25,36 @@ FULL OUTER JOIN | same as OUTER JOIN | no
 ON | preceded by JOIN | yes
 GROUP BY | aggregate rows with the same values | yes
 
+## Retention Studies
+
+suppose we are continuously upserting into dim_customer (which contains the AcquisitionDate),
+from the daily_activity table\
+we could use the following code:
+
+```sql
+UPSERT INTO dim_customer
+SELECT
+ COALESCE(dc.CustomerId, ac.CustomerId) AS CustomerId, 
+ LEAST(dc.AcquisitionDate, ac.ActivityDate) AS AcquisitionDate
+FROM dim_customers dc
+FULL OUTER JOIN (
+ SELECT 
+  CustomerId,
+  ActivityDate
+ FROM daily_activity 
+ WHERE 
+  ActivityType = 'signup'
+  AND ActivityDate = '<RUN_DATE>'
+ GROUP BY 1, 2
+) ac 
+ ON dc.CustomerId = ac.CustomerId
+GROUP BY 1, 2
+```
+where <RUN_DATE> is the incremental date (do this every day)
+
 # footnotes
 
-word | oxford dictionary
+word | meaning
 --- | ---
 COALESCE | to come together to form one larger group, substance, etc
 SKU | Stock Keeping Unit
