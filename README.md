@@ -25,6 +25,15 @@ see the detailed python code [here](generation.ipynb).
 ## Loading Data Into MySQL
 
 ```sql
+CREATE TABLE daily_activity (
+	`index` INT,
+	`CustomerId` INT,
+	`ActivityDate` DATE,
+	`ActivityType` INT
+)
+```
+
+```sql
 LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv" INTO TABLE daily_activity
 	FIELDS TERMINATED BY ','
 	IGNORE 1 LINES;
@@ -35,6 +44,13 @@ LOAD DATA INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/data.csv" INTO T
 suppose we are continuously upserting into dim_customer (which contains the AcquisitionDate),
 from the daily_activity table\
 we could use the following code:
+
+```sql
+CREATE TABLE dim_customer (
+	`CustomerId` INT KEY,
+	`AcquisitionDate` DATE
+)
+```
 
 ```sql
 UPSERT INTO dim_customer
