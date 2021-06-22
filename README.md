@@ -22,6 +22,14 @@ dim_customer | a cohort table to be computed with SQL
 
 see the detailed python code [here](generation.ipynb).
 
+## Encoding
+
+Code | Activity
+--- | ---
+0 | sign-up
+1 | sign-in
+2 | purchase
+
 ## Loading Data Into MySQL
 
 ```sql
@@ -153,7 +161,7 @@ DaySinceAcquisition | D1ActiveCustomers
 
 Now let's see the decay pattern, which we expect to be constant (uniformly distributed and not decaying)
 
-<img src="https://user-images.githubusercontent.com/12572058/123000281-f6ffe580-d3e1-11eb-90b4-d051e864e37b.png" width=60%>
+<img src="decay_percent.png" width=60%>
 
 # footnotes
 
